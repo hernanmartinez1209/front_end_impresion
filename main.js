@@ -24,13 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = 'Intentando imprimir...';
 
             if (selectedFile.type === 'application/pdf') {
-                // **Método preferido para PDF en móvil:** Usar iframe
                 const fileURL = URL.createObjectURL(selectedFile);
                 const printFrame = document.createElement('iframe');
                 printFrame.style.position = 'absolute';
                 printFrame.style.top = '-9999px';
                 document.body.appendChild(printFrame);
-                printFrame.onload = function() {
+                printFrame.onload = function () {
                     printFrame.contentWindow.focus();
                     printFrame.contentWindow.print();
                     document.body.removeChild(printFrame);
@@ -38,19 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 printFrame.src = fileURL;
             } else if (selectedFile.type.startsWith('image/')) {
-                // **Intento de imprimir imagen con Print.js:**
                 const fileURL = URL.createObjectURL(selectedFile);
                 printJS(fileURL, 'image');
                 statusMessage.textContent = 'Intento de impresión de imagen iniciado.';
             } else if (selectedFile.type === 'text/plain') {
-                // **Ejemplo básico para texto plano (puede no ser ideal para impresión compleja):**
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     printJS({ printable: e.target.result, type: 'raw-text' });
                     statusMessage.textContent = 'Intento de impresión de texto iniciado.';
                 };
                 reader.readAsText(selectedFile);
-            } else if (selectedFile.type === 'application/msword' || selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            } else if (
+                selectedFile.type === 'application/msword' ||
+                selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ) {
                 statusMessage.textContent = 'Los archivos de Word pueden requerir conversión a PDF para una impresión más fiable en el navegador. Considere usar una herramienta en línea o una aplicación para convertir el archivo a PDF primero.';
                 const downloadLink = document.createElement('a');
                 downloadLink.href = URL.createObjectURL(selectedFile);

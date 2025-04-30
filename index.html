@@ -13,7 +13,7 @@
 
         <div class="upload-section">
             <h2>1. Cargar Archivo</h2>
-            <input type="file" id="fileInput">
+            <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx">
             <p id="fileName">Ningún archivo seleccionado.</p>
         </div>
 
@@ -45,7 +45,7 @@
                     <option value="color">Color</option>
                 </select>
             </div>
-            </div>
+        </div>
 
         <button id="printButton" disabled>Enviar a Imprimir</button>
 
@@ -55,6 +55,51 @@
         </div>
     </div>
 
-    <script src="main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const fileInput = document.getElementById('fileInput');
+        const fileNameDisplay = document.getElementById('fileName');
+        const printButton = document.getElementById('printButton');
+        const statusMessage = document.getElementById('statusMessage');
+
+        fileInput.addEventListener('change', () => {
+            const selectedFile = fileInput.files[0];
+            if (selectedFile) {
+                fileNameDisplay.textContent = `Archivo seleccionado: ${selectedFile.name}`;
+                printButton.disabled = false;
+                statusMessage.textContent = 'Listo para intentar imprimir.';
+            } else {
+                fileNameDisplay.textContent = 'Ningún archivo seleccionado.';
+                printButton.disabled = true;
+                statusMessage.textContent = 'Listo para cargar un archivo.';
+            }
+        });
+
+        printButton.addEventListener('click', () => {
+            const selectedFile = fileInput.files[0];
+
+            if (!selectedFile) {
+                statusMessage.textContent = 'Por favor, selecciona un archivo primero.';
+                return;
+            }
+
+            const fileURL = URL.createObjectURL(selectedFile);
+
+            if (selectedFile.type === 'application/pdf' || selectedFile.type.startsWith('image/') || selectedFile.type === 'text/plain') {
+                // Abrir en nueva pestaña
+                window.open(fileURL, '_blank');
+                statusMessage.textContent = 'Archivo abierto en nueva pestaña. Usa el menú del navegador para imprimir.';
+            } else {
+                statusMessage.textContent = 'Este tipo de archivo no puede imprimirse directamente. Descárgalo para imprimirlo con otra aplicación.';
+                const downloadLink = document.createElement('a');
+                downloadLink.href = fileURL;
+                downloadLink.download = selectedFile.name;
+                downloadLink.textContent = 'Descargar archivo';
+                statusMessage.appendChild(document.createElement('br'));
+                statusMessage.appendChild(downloadLink);
+            }
+        });
+    });
+    </script>
 </body>
 </html>
