@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileName');
     const printButton = document.getElementById('printButton');
     const statusMessage = document.getElementById('statusMessage');
 
@@ -51,8 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.readAsText(selectedFile);
             } else if (selectedFile.type === 'application/msword' || selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                 statusMessage.textContent = 'Los archivos de Word pueden requerir conversión a PDF para una impresión más fiable en el navegador. Considere usar una herramienta en línea o una aplicación para convertir el archivo a PDF primero.';
-                // **En este punto, podrías ofrecer una opción para que el usuario descargue el archivo
-                // y lo imprima con una aplicación nativa en su celular.**
                 const downloadLink = document.createElement('a');
                 downloadLink.href = URL.createObjectURL(selectedFile);
                 downloadLink.download = selectedFile.name;
@@ -61,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusMessage.appendChild(downloadLink);
             } else {
                 statusMessage.textContent = `Formato de archivo "${selectedFile.type}" no soportado para impresión directa desde el navegador móvil. Considere convertir a PDF o usar una aplicación nativa para imprimir.`;
-                // **Similar a Word, podrías ofrecer una opción de descarga.**
                 const downloadLink = document.createElement('a');
                 downloadLink.href = URL.createObjectURL(selectedFile);
                 downloadLink.download = selectedFile.name;
